@@ -11,10 +11,10 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto">
       <h1 className="sfont-black text-4xl capitalize">
-          <span className="text-slate-700">Dashboard</span>
+          <span className="text-slate-700">Panel de Control</span>
       </h1>
       <button  className="bg-yellow-700 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" onClick={handleCloseSesion}>
-      Button
+        Cerrar Sesión
     </button>
 
 
