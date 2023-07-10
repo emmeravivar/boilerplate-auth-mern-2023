@@ -4,7 +4,7 @@ function App() {
 
   return (
 
-      <h1>Hola!</h1>
+      <h1>Auth Front End 2023 - Eva Mera</h1>
 
   )
 }

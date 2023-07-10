@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 //Diseñamos nuestro Schema
-const usuarioSchema = mongoose.Schema(
+const userSchema = mongoose.Schema(
     {
-        nombre: {
+        userName: {
             type: String,
             required: true,
             trim: true,
@@ -23,7 +23,7 @@ const usuarioSchema = mongoose.Schema(
         token: {
             type: String,
         },
-        confirmado: {
+        tokenConfirm: {
             type: Boolean,
             default: false,
         },
@@ -35,10 +35,10 @@ const usuarioSchema = mongoose.Schema(
 
 
 //Esto hace que se ejecute antes de guardar el registro en la BBDD
-usuarioSchema.pre('save', async function(next) {
+userSchema.pre('save', async function(next) {
 
     //Esta función regisa que el pass de aquí no ha cambiado,
-    //ya que si no se hace y se envia una actualización del usuario
+    //ya que si no se hace y se envia una actualización del user
     // volverá a hashear y ya no podrán acceder.
     if(!this.isModified('password')) {
         next() // next iría a la siguiente paso
@@ -54,15 +54,15 @@ usuarioSchema.pre('save', async function(next) {
 })
 
 //Metodo para comprobar el password
-usuarioSchema.methods.comprobarPassword = async function(passwordFormulario) {
+userSchema.methods.checkPassword = async function(passwordForm) {
 
     //retornará true o false con el metodo compare
-    return await bcrypt.compare(passwordFormulario, this.password)
+    return await bcrypt.compare(passwordForm, this.password)
 
 }
 
 
 //Definir el schema
-const Usuario = mongoose.model("Usuario", usuarioSchema)
+const User = mongoose.model("user", userSchema)
 
-export default Usuario;
+export default User;

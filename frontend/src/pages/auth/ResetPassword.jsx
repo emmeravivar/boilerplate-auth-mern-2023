@@ -1,19 +1,18 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-// import clienteAxios from '../server/clienteAxios'
 import { sendResetPassword } from '../../server/api/user/post'
-import Alerta from '../../components/Alerta'
+import Alert from '../../components/Alert'
 
-const OlvidePassword = () => {
+const ResetPassword = () => {
 
     const [email, setEmail] = useState('')
-    const [alerta, setAlerta] = useState({})
+    const [alert, setAlert] = useState({})
 
     const handleSubmit = async e => {
         e.preventDefault();
 
         if(email === '' || email.length < 6) {
-            setAlerta({
+            setAlert({
                 msg: 'El Email es obligatorio',
                 error: true
             });
@@ -21,17 +20,16 @@ const OlvidePassword = () => {
         }
 
         try {
-            // const { data } = await clienteAxios.post(`/usuarios/olvide-password`, { email })
             const { data } = await sendResetPassword({ email })
             console.log(data)
 
-            setAlerta({
+            setAlert({
                 msg: data.msg,
                 error: false
             })
             
         } catch (error) {
-            setAlerta({
+            setAlert({
                 msg: error.response.data.msg,
                 error: true
             })
@@ -40,7 +38,7 @@ const OlvidePassword = () => {
 
     }
 
-    const { msg } = alerta
+    const { msg } = alert
 
     return (
         <>
@@ -48,7 +46,7 @@ const OlvidePassword = () => {
                 <span className="text-slate-700">proyectos</span>
             </h1>
 
-            { msg && <Alerta alerta={alerta} />}
+            { msg && <Alert alert={alert} />}
 
             <form 
                 className="my-10 bg-white shadow rounded-lg p-10"
@@ -96,4 +94,4 @@ const OlvidePassword = () => {
     )
 }
 
-export default OlvidePassword
+export default ResetPassword

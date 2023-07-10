@@ -1,40 +1,39 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-// import clienteAxios from '../server/clienteAxios'
 import {  confirmNewPassword  } from '../../server/api/user/get'
-import { saveNewPassword } from '../../server/api/user/post'
-import Alerta from '../../components/Alerta'
+import { sendNewPassword } from '../../server/api/user/post'
+import Alert from '../../components/Alert'
 
-const NuevoPassword = () => {
+const NewPassword = () => {
 
     const [password, setPassword] = useState('')
-    const [tokenValido, setTokenValido] = useState(false)
-    const [alerta, setAlerta] = useState({})
-    const [passwordModificado, setPasswordModificado] = useState(false)
+    const [validationToken, setValidationToken] = useState(false)
+    const [alert, setAlert] = useState({})
+    const [newPassword, setNewPassword] = useState(false)
 
     const params = useParams()
     const { token } = params
 
     useEffect(() => {
-        const comprobarToken = async () => {
+        const checkTokenUser = async () => {
             try {
                 await confirmNewPassword(token)
-                setTokenValido(true)
+                setValidationToken(true)
             } catch (error) {
-                setAlerta({
+                setAlert({
                     msg: error.response.data.msg,
                     error: true
                 })
             }
         }
-        comprobarToken()
+        checkTokenUser()
     }, [])
 
     const handleSubmit = async e => {
         e.preventDefault();
 
         if(password.length < 6) {
-            setAlerta({
+            setAlert({
                 msg: 'El Password debe ser minimo de 6 caracteres',
                 error: true
             })
@@ -42,21 +41,21 @@ const NuevoPassword = () => {
         }
 
         try {
-            const { data } = await saveNewPassword(token, { password })
-            setAlerta({
+            const { data } = await sendNewPassword(token, { password })
+            setAlert({
                 msg: data.msg,
                 error: false
             })
-            setPasswordModificado(true)
+            setNewPassword(true)
         } catch (error) {
-            setAlerta({
+            setAlert({
                 msg: error.response.data.msg,
                 error: true
             })
         }
     }
 
-    const { msg } = alerta
+    const { msg } = alert
         
     return (
         <>
@@ -64,9 +63,9 @@ const NuevoPassword = () => {
                 <span className="text-slate-700">proyectos</span>
             </h1>
 
-            {msg && <Alerta alerta={alerta} />}
+            {msg && <Alert alert={alert} />}
         
-            { tokenValido && (
+            { validationToken && (
                 <form 
                     className="my-10 bg-white shadow rounded-lg p-10"
                     onSubmit={handleSubmit}
@@ -95,7 +94,7 @@ const NuevoPassword = () => {
                 </form>
             )}
 
-            {passwordModificado && (
+            {newPassword && (
                     <Link 
                         className='block text-center my-5 text-slate-500 uppercase text-sm'
                         to="/"
@@ -105,4 +104,4 @@ const NuevoPassword = () => {
     )
 }
 
-export default NuevoPassword
+export default NewPassword

@@ -6,16 +6,17 @@ const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
-    
+
     const [auth, setAuth] = useState({})
     const [loading, setLoading ] = useState(true)
-
     const navigate = useNavigate()
 
     useEffect(() => {
 
-        const autenticarUsuario = async () => {
+        const authUser = async () => {
             const token = localStorage.getItem('token')
+            console.log('Entrando aquí... =>', token)
+
             if(!token){
                 setLoading(false) 
                 return
@@ -29,9 +30,11 @@ const AuthProvider = ({ children }) => {
             }
 
             try {
+                console.log('Leyendo en try')
                 const { data } = await getUserProfile(config)
+                console.log('Data:', data)
                 setAuth(data)
-                navigate('/proyectos')
+                navigate('/dashboard')
             }
             catch(error) {
                 setAuth({})
@@ -39,17 +42,21 @@ const AuthProvider = ({ children }) => {
 
             setLoading(false)
         }
-        autenticarUsuario()
-
+        authUser()
 
     },[])
 
+    const closeSesion = () => {
+        setAuth({})
+        navigate('/')
+    }
     return(
         <AuthContext.Provider
             value = {{                
                     setAuth, 
                     auth, 
-                    loading
+                    loading,
+                    closeSesion
                 }}
         >
             {children}
@@ -57,6 +64,6 @@ const AuthProvider = ({ children }) => {
     )
 }
 
-export {AuthProvider}
+export { AuthProvider }
 
 export default AuthContext;

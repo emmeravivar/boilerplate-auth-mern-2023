@@ -1,19 +1,19 @@
 import { createBrowserRouter } from 'react-router-dom'
-import { AuthProvider } from '../context/AuthProvider.jsx'
-import AuthLayout from './../layouts/AuthLayout.jsx'
-import Login from '../paginas/auth/Login'
-import Registrar from '../paginas/auth/Registrar'
-import OlvidarPassword from '../paginas/auth/OlvidarPassword'
-import NuevoPassword from '../paginas/auth/NuevoPassword'
-import ConfirmarCuenta from '../paginas/auth/ConfirmarCuenta.jsx'
-import RutaProtegida from '../layouts/RutaProtegida.jsx'
-import Proyectos from '../paginas/proyectos/Proyectos.jsx'
+import { AuthProvider } from '../context/AuthProvider'
+import AuthLayout from '../layouts/AuthLayout'
+import Login from './../pages/auth/Login'
+import Signup from './../pages/auth/Signup'
+import ResetPassword from './../pages/auth/ResetPassword'
+import NewPassword from './../pages/auth/NewPassword'
+import AccountConfirm from './../pages/auth/AccountConfirm'
+import AccessToDashboard from './../layouts/AccessToDashboard'
+import Dashboard from './../pages/dashboard/Dashboard'
 
 
 const Routers = createBrowserRouter([
     {
         path: "/",
-        element:<AuthProvider>
+        element: <AuthProvider>
                     <AuthLayout />
                 </AuthProvider>,
         children: [
@@ -22,35 +22,46 @@ const Routers = createBrowserRouter([
             element: <Login />,
         },
         {
-            path: '/registrar',
-            element: <Registrar />,
+            path: '/singup',
+            element: <Signup />,
         },
         {
-            path: '/olvide-password',
-            element: <OlvidarPassword />,
+            path: '/reset-password',
+            element: <ResetPassword />,
         },
         {
-            path: '/resetear-password/:token',
-            element: <NuevoPassword />,
+            path: '/reset-password/:token',
+            element: <NewPassword />,
         },
         {
-            path: '/confirmar/:token',
-            element: <ConfirmarCuenta />,
+            path: '/confirm-account/:token',
+            element: <AccountConfirm />,
+        },
+        {
+            path: '/dashboard',
+            element: <AccessToDashboard />,
+            children: [ {
+                path: "/dashboard",
+                element: <Dashboard />
+                }
+            ]
         },
         ],
     },
-    {
-        path: "/proyectos",
-        element: <AuthProvider>
-                    <RutaProtegida />
-                </AuthProvider>,
-        children: [
-                {
-                    path: "/proyectos",
-                    element: <Proyectos />
-                }
-        ]
-    },
+    // {
+    //     path: "/dashboard",
+    //     // element: <AuthProvider>
+    //     //             <AccessToDashboard />
+    //     //         </AuthProvider>,
+    //                     element: 
+    //                 <AccessToDashboard />,
+    //     children: [
+                // {
+                //     path: "/dashboard",
+                //     element: <Dashboard />
+                // }
+    //     ]
+    // },
 
 ]);
 

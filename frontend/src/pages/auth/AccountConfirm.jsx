@@ -1,53 +1,52 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-// import clienteAxios from '../server/clienteAxios'
 import {confirmNewUser } from '../../server/api/user/get.jsx'
-import Alerta from '../../components/Alerta.jsx'
+import Alert from '../../components/Alert'
 
 
-const ConfirmarCuenta = () => {
+const AccountConfirm= () => {
 
-  const [alerta, setAlerta] = useState({})
-  const [cuentaConfirmada, setCuentaConfirmada] = useState(false)
+  const [alert, setAlert] = useState({})
+  const [confirmAccount, setConfirmAccount] = useState(false)
 
   const params = useParams();
   const { token } = params
-  console.log(token)
+
 
   useEffect(() => {
-    const confirmarCuenta = async () => {
+    const confirmAccount = async () => {
       try {
           const { data } = await confirmNewUser(token)
 
-          setAlerta({
+          setAlert({
             msg: data.msg,
             error: false
           })
-          setCuentaConfirmada(true)
+          setConfirmAccount(true)
 
       } catch (error) {
-          setAlerta({
+          setAlert({
             msg: error.response.data.msg,
             error: true
           })
       }
     }
-    confirmarCuenta();
+    confirmAccount();
   }, [])
 
-  const { msg } = alerta
+  const { msg } = alert
 
 
   return (
     <>
         <h1 className="text-sky-600 font-black text-6xl capitalize">Confirma tu cuenta y Comienza a crear tus {''}
-            <span className="text-slate-700">proyectos</span>
+            <span className="text-slate-700">Dashboard</span>
         </h1>
 
         <div className='mt-20 md:mt-10 shadow-lg px-5 py-10 rounded-xl bg-white'>
-          {msg && <Alerta alerta={alerta} />}
+          {msg && <Alert alert={alert} />}
 
-          {cuentaConfirmada && (
+          {confirmAccount && (
             <Link 
                 className='block text-center my-5 text-slate-500 uppercase text-sm'
                 to="/"
@@ -58,4 +57,4 @@ const ConfirmarCuenta = () => {
   )
 }
 
-export default ConfirmarCuenta
+export default AccountConfirm

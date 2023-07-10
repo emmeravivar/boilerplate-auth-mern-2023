@@ -1,75 +1,68 @@
-import Usuario from '../models/Usuario.model.js'
-import crearId from '../helpers/idGenerate.js'
+import User from '../models/User.model.js'
+import tokenIdGenerate from '../helpers/tokenIdGenerate.js'
 import jwtGenerator from '../helpers/jwtGenerate.js'
-import {  emailRegistro, emailRecuperarPassword  } from '../helpers/emails.js'
+import {  emailConfirmNewUserToken, emailResetPassword  } from '../helpers/emails.js'
 
 
 
-const crearUsuario = async (req, res) => {
-	
-	//Enviar mensajes de error
+const createNewUser = async (req, res) => {
+
 	const { email } = req.body;
-	const existeUsuario = await Usuario.findOne({ email }) //<= metodo que encuentra el primero que coincida
+	const haveUserEmail = await User.findOne({ email }) //<= metodo que encuentra el primero que coincida
 	
-	if(existeUsuario) {
-		const error = new Error('Usuario ya registrado');
+	if(haveUserEmail) {
+		const error = new Error('You are registered');
 		return res.status(403).json({ msg: error.message })
 	}
 
 	try {
 		//Crear el objeto y almacenarlo
-		const usuario = new Usuario(req.body) //req.body es donde está almacenado en obj postman
-		console.log(usuario)
-		//Generamos el token y añadimos al objeto usuario que hemos creado
-		usuario.token = crearId()
-		console.log(usuario)
-		await usuario.save()
+		const user = new User(req.body) //req.body es donde está almacenado en obj postman
+		//Generamos el token y añadimos al objeto User que hemos creado
+		user.token = tokenIdGenerate()
+		await user.save()
 
 		//Enviar el mail de confirmación
-		emailRegistro( {
-			email: usuario.email,
-			nombre: usuario.nombre,
-			token: usuario.token
+		emailConfirmNewUserToken( {
+			email: user.email,
+			userName: user.userName,
+			token: user.token
 		})
 
 
-		res.json(usuario)
+		res.json(user)
 	}
 	catch (error) {
-		error = new Error('No se pudo crear el usuario');
+		error = new Error('No se pudo crear el User');
 		return res.status(401).json({ msg: error.message })
 	}
 } 
 
-const autenticar = async (req, res) => {
-	
-
+const authUser = async (req, res) => {	
 	//Traemos las variables
 	const { email, password } = req.body
 
+	// //Saber si el User existe
+	const user = await User.findOne({ email })
 
-	// //Saber si el usuario existe
-	const usuario = await Usuario.findOne({ email })
-	if(!usuario) {
-		const error = new Error('Usuario no existe');
+	if(!user) {
+		const error = new Error('User no existe');
 		return res.status(400).json({ msg: error.message })
 	}
 
-
-	// Comprobar si el usuario está confirmado
-	if(!usuario.confirmado) {
+	// Comprobar si el User está confirmado
+	if(!user.tokenConfirm) {
 		const error = new Error('Tu cuenta no ha sido confirmada');
 		return res.status(403).json({ msg: error.message })
 	}
 
-
 	//Comprobar su password
-	if( await usuario.comprobarPassword(password)) {
+	if( await user.checkPassword(password)) {
 		res.json( {
-			_id: usuario._id,
-			nombre: usuario.nombre,
-			email: usuario.email,
-			token: jwtGenerator(usuario._id)
+			_id: user._id,
+			userName: user.userName,
+			email: user.email,
+			token: jwtGenerator(user._id)
 		})
 
 	} else {
@@ -80,15 +73,15 @@ const autenticar = async (req, res) => {
 }
 
 // Función para confirmar la cuenta con el token 
-const confirmar = async (req, res) => {
+const confirmTokenUser = async (req, res) => {
 
 	const { token } = req.params
 
-	//Evaluando el token buscando usuarios con ese token
-	const usuarioConfirmar = await Usuario.findOne({ token })
+	//Evaluando el token buscando Users con ese token
+	const haveUserTokenConfirm = await User.findOne({ token })
 	
 	// Si no existe:
-	if(!usuarioConfirmar) {
+	if(!haveUserTokenConfirm) {
 		const error = new Error('El token no es valido');
 		return res.status(403).json({ msg: error.message })
 	}
@@ -97,9 +90,9 @@ const confirmar = async (req, res) => {
 	//eliminamos el token porque va a ser de un solo uso
 	try {
 		
-		usuarioConfirmar.confirmado = true; 
-		usuarioConfirmar.token = ''; 
-		await usuarioConfirmar.save()
+		haveUserTokenConfirm.tokenConfirm = true; 
+		haveUserTokenConfirm.token = ''; 
+		await haveUserTokenConfirm.save()
 		res.json({ msg: 'Token confirmado'})
 
 	} catch (error) {
@@ -109,27 +102,27 @@ const confirmar = async (req, res) => {
 	}
 }
 
-const resetearPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
 	
 	const { email } = req.body
 
-	// //Saber si el usuario existe
-	const usuario = await Usuario.findOne({ email })
-	if(!usuario) {
-		const error = new Error('Usuario no existe');
+	// //Saber si el User existe
+	const user = await User.findOne({ email })
+	if(!user) {
+		const error = new Error('User no existe');
 		return res.status(400).json({ msg: error.message })
 	}
 
 	try {
-		usuario.token = crearId(); 
-		await usuario.save()
+		user.token = tokenIdGenerate(); 
+		await user.save()
 		res.json( { msg: 'Hemos enviado un email con las instrucciones'})
 
 		//Enviar el mail de confirmación
-		emailRecuperarPassword( {
-			email: usuario.email,
-			nombre: usuario.nombre,
-			token: usuario.token
+		emailResetPassword( {
+			email: user.email,
+			userName: user.userName,
+			token: user.token
 		})
 
 
@@ -141,13 +134,13 @@ const resetearPassword = async (req, res) => {
 
 }
 
-const comprobarToken = async (req, res) => {
+const checkTokenUser = async (req, res) => {
 	
 	const { token } = req.params
 
-	const tokenValido = await Usuario.findOne( {token})
+	const haveUserValidToken = await User.findOne( {token})
 
-	if(tokenValido) {
+	if(haveUserValidToken) {
 		res.json( { msg: 'Token valido'})
 	} else {
 		const error = new Error('Token no valido');
@@ -155,19 +148,19 @@ const comprobarToken = async (req, res) => {
 	}
 }
 
-const nuevoPassword = async (req, res) => {
+const newPassword = async (req, res) => {
 
 	const { token } = req.params
 	const { password } = req.body
 
-	const usuario = await Usuario.findOne( {token})
+	const user = await User.findOne( {token})
 
-	if(usuario) {
-		usuario.password = password
-		usuario.token = ''
+	if(user) {
+		user.password = password
+		user.token = ''
 			
 		try {
-			await usuario.save();
+			await user.save();
 			res.json( { msg: 'Contraseña ha sido cambiada correctamente'})
 		} catch (error) {
 			console.log('Error')
@@ -179,10 +172,16 @@ const nuevoPassword = async (req, res) => {
 	}
 }
 
-const perfil = async (req, res) => {
-	console.log('Lenyendo...')
-	const { Usuario } = req
-	res.json(Usuario)
+const userProfile = async (req, res) => {
+	console.log('Leyendos...')
+	const { User } = req
+	res.json(User)
 }
 
-export {crearUsuario, autenticar, confirmar, resetearPassword, comprobarToken, nuevoPassword, perfil}
+const otherProfile = async (req, res) => {
+	const { User } = req
+	console.log('Leyendos...', User)
+	res.json(User)
+}
+
+export {createNewUser, authUser, confirmTokenUser, resetPassword, checkTokenUser, newPassword, userProfile, otherProfile}

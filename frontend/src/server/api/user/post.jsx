@@ -1,6 +1,6 @@
-import clienteAxios from '../../clienteAxios'
+import clientAxios from '../../clientAxios'
 
-export const saveNewUser = async data => await clienteAxios.post(`/usuarios`, data )
-export const sendResetPassword = async email => await clienteAxios.post(`/usuarios/resetear-password/`, email )
-export const saveNewPassword = async (token, password) => await clienteAxios.post(`usuarios/resetear-password/${token}`, password)
-export const sendLogin= async (data) => await clienteAxios.post(`/usuarios/login`, data)
+export const sendNewUser = async data => await clientAxios.post(`/user`, data )
+export const sendResetPassword = async email => await clientAxios.post(`/user/reset-password/`, email )
+export const sendNewPassword = async (token, password) => await clientAxios.post(`user/reset-password/${token}`, password)
+export const sendLogin= async (data) => await clientAxios.post(`/user/login`, data)

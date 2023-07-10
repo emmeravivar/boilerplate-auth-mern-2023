@@ -1,18 +1,18 @@
 import { useState } from 'react'
-import {Link} from 'react-router-dom'
-import Alerta from '../../components/Alerta'
-import { saveNewUser } from '../../server/api/user/post'
+import { Link } from 'react-router-dom'
+import Alert from '../../components/Alert'
+import { sendNewUser } from './../../server/api/user/post'
 
 
-const Registrar = () => {
+const Signup = () => {
 
-    const [ nuevoUsuario, setNuevoUsuario] = useState( {
-        nombre: '',
+    const [ newUser, setNewUser] = useState( {
+        userName: '',
         email: '',
         password: '',
         password2:''
     })
-    const [ alerta, setAlerta ] = useState({})
+    const [ alert, setAlert ] = useState({})
 
 
 
@@ -20,26 +20,25 @@ const Registrar = () => {
     const handleChange = e => {
 
         const { name, value } = e.target
-        const nuevoUsuarioData = {...nuevoUsuario, [name]:value}
-        setNuevoUsuario(nuevoUsuarioData)
+        const newUserData = {...newUser, [name]:value}
+        setNewUser(newUserData)
 
     }
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const { nombre, email, password, password2 } = nuevoUsuario
+        const { userName, email, password, password2 } = newUser
 
-        if([nombre, email, password, password2].includes('')) {
-            setAlerta({
+        if([userName, email, password, password2].includes('')) {
+            setAlert({
                 msg: 'Todos los campos son obligatorios',
                 error: true
             })
             return
         }
-        console.log(password, password2)
 
         if(password !== password2 ) {
-            setAlerta({
+            setAlert({
                 msg: 'Los password no son iguales',
                 error: true
             })
@@ -47,43 +46,40 @@ const Registrar = () => {
         }
 
         if(password.length < 6 ) {
-            setAlerta({
+            setAlert({
                 msg: 'El Password es muy corto, agrega mínimo 6 caracteres',
                 error: true
             })
             return
         }
 
-        setAlerta({})
+        setAlert({})
 
 
         // Crear el usuario en la API
         try {
-
-            const { data } = await saveNewUser(nuevoUsuario)
-            
-            //Todo abrir una modal o otra página
-            setAlerta({
+            const { data } = await sendNewUser(newUser)
+            setAlert({
                 msg: data.msg,
                 error: false
             })
 
-            setNuevoUsuario( {
-                nombre: '',
+            setNewUser( {
+                userName: '',
                 email: '',
                 password: '',
                 password2:''
             })
 
         } catch (error) {
-            setAlerta({
+            setAlert({
                 msg: error.response.data.msg,
                 error: true
             })
         }
     }
 
-    const { msg } = alerta
+    const { msg } = alert
 
     return (
         <>
@@ -91,7 +87,7 @@ const Registrar = () => {
                 <span className="text-slate-700">proyectos</span>
             </h1>
 
-            { msg && <Alerta alerta={alerta} /> }
+            { msg && <Alert alerta={alert} /> }
         
             <form 
                 className="my-10 bg-white shadow rounded-lg p-10"
@@ -103,12 +99,12 @@ const Registrar = () => {
                         htmlFor="nombre"
                     >Nombre</label>
                     <input
-                        id="nombre"
-                        name="nombre"
+                        id="userName"
+                        name="userName"
                         type="text"
                         placeholder="Tu Nombre"
                         className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                        value={ nuevoUsuario.nombre }
+                        value={ newUser.userName }
                         onChange={ handleChange }
                     />
                 </div>
@@ -124,7 +120,7 @@ const Registrar = () => {
                         type="email"
                         placeholder="Email de Registro"
                         className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                        value={ nuevoUsuario.email }
+                        value={ newUser.email }
                         onChange={ handleChange }
                     />
                 </div>
@@ -139,7 +135,7 @@ const Registrar = () => {
                         type="password"
                         placeholder="Password de Registro"
                         className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                        value={nuevoUsuario.password}
+                        value={newUser.password}
                         onChange={handleChange}
                     />
                 </div>
@@ -155,7 +151,7 @@ const Registrar = () => {
                         type="password"
                         placeholder="Repetir tu Password"
                         className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                        value={nuevoUsuario.password2}
+                        value={newUser.password2}
                         onChange={handleChange}
                     />
                 </div>
@@ -184,4 +180,4 @@ const Registrar = () => {
   )
 }
 
-export default Registrar
+export default Signup

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const clienteAxios = axios.create({
+const clientAxios = axios.create({
     baseURL: `${import.meta.env.VITE_BACKEND_URL}/api`
 })
 
-export default clienteAxios;
+export default clientAxios;
