@@ -24,12 +24,12 @@ const checkAuth = async (req, res, next) => {
             return next()
 
         } catch (error) {
-            return res.status(404).json({ msg: 'hubo un error'})
+            return res.status(404).json({ msg: 'Error 404!'})
         }
     }
 
     if(!token) {
-        const error = new Error('token no valido')
+        const error = new Error('token is no valid')
 		return res.status(401).json({ msg:  error.message })
     }
     next()

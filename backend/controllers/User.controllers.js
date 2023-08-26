@@ -6,7 +6,7 @@ import {  emailConfirmNewUserToken, emailResetPassword  } from '../helpers/email
 
 
 const createNewUser = async (req, res) => {
-
+	console.log(req.body);
 	const { email } = req.body;
 	const haveUserEmail = await User.findOne({ email }) //<= metodo que encuentra el primero que coincida
 	
@@ -46,13 +46,13 @@ const authUser = async (req, res) => {
 	const user = await User.findOne({ email })
 
 	if(!user) {
-		const error = new Error('User no existe');
+		const error = new Error('User no exist. Please, sign up.');
 		return res.status(400).json({ msg: error.message })
 	}
 
 	// Comprobar si el User está confirmado
 	if(!user.tokenConfirm) {
-		const error = new Error('Tu cuenta no ha sido confirmada');
+		const error = new Error('Please, confirm your account');
 		return res.status(403).json({ msg: error.message })
 	}
 
@@ -66,7 +66,7 @@ const authUser = async (req, res) => {
 		})
 
 	} else {
-		const error = new Error('El password es incorrecto');
+		const error = new Error('Incorrect Passowrd');
 		return res.status(403).json({ msg: error.message })
 	}
 
@@ -82,7 +82,7 @@ const confirmTokenUser = async (req, res) => {
 	
 	// Si no existe:
 	if(!haveUserTokenConfirm) {
-		const error = new Error('El token no es valido');
+		const error = new Error('Token no valid');
 		return res.status(403).json({ msg: error.message })
 	}
 
@@ -93,10 +93,10 @@ const confirmTokenUser = async (req, res) => {
 		haveUserTokenConfirm.tokenConfirm = true; 
 		haveUserTokenConfirm.token = ''; 
 		await haveUserTokenConfirm.save()
-		res.json({ msg: 'Token confirmado'})
+		res.json({ msg: 'Account confirm!'})
 
 	} catch (error) {
-		error = new Error('No se ha podido confirmar el token');
+		error = new Error('No can confirm account');
 		return res.status(403).json({ msg: error.message })
 
 	}
@@ -109,14 +109,14 @@ const resetPassword = async (req, res) => {
 	// //Saber si el User existe
 	const user = await User.findOne({ email })
 	if(!user) {
-		const error = new Error('User no existe');
+		const error = new Error('User is not exist');
 		return res.status(400).json({ msg: error.message })
 	}
 
 	try {
 		user.token = tokenIdGenerate(); 
 		await user.save()
-		res.json( { msg: 'Hemos enviado un email con las instrucciones'})
+		res.json( { msg: 'Send the email'})
 
 		//Enviar el mail de confirmación
 		emailResetPassword( {
@@ -127,7 +127,7 @@ const resetPassword = async (req, res) => {
 
 
 	} catch (error) {
-		error = new Error('No se ha podido enviar el mail');
+		error = new Error('No send the email');
 		return res.status(403).json({ msg: error.message })
 	}
 
@@ -141,9 +141,9 @@ const checkTokenUser = async (req, res) => {
 	const haveUserValidToken = await User.findOne( {token})
 
 	if(haveUserValidToken) {
-		res.json( { msg: 'Token valido'})
+		res.json( { msg: 'Confirm account'})
 	} else {
-		const error = new Error('Token no valido');
+		const error = new Error('Token is not valid');
 		return res.status(404).json({ msg: error.message })
 	}
 }
@@ -161,26 +161,25 @@ const newPassword = async (req, res) => {
 			
 		try {
 			await user.save();
-			res.json( { msg: 'Contraseña ha sido cambiada correctamente'})
+			res.json( { msg: 'Change password correct'})
 		} catch (error) {
 			console.log('Error')
 		}
 	
 	} else {
-		const error = new Error('Token no valido');
+		const error = new Error('Token no valid');
 		return res.status(404).json({ msg: error.message })
 	}
 }
 
 const userProfile = async (req, res) => {
-	console.log('Leyendos...')
+
 	const { User } = req
 	res.json(User)
 }
 
 const otherProfile = async (req, res) => {
 	const { User } = req
-	console.log('Leyendos...', User)
 	res.json(User)
 }
 

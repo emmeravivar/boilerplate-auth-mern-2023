@@ -39,18 +39,18 @@ const AccountConfirm= () => {
 
   return (
     <>
-        <h1 className="text-sky-600 font-black text-6xl capitalize">Confirma tu cuenta y Comienza a crear tus {''}
-            <span className="text-slate-700">Dashboard</span>
+        <h1 className="text-teal-600 font-black text-4xl capitalize">ConfirmYour
+            <span className="text-emerald-900">Account</span>
         </h1>
 
-        <div className='mt-20 md:mt-10 shadow-lg px-5 py-10 rounded-xl bg-white'>
+        <div className='mt-20 md:mt-10 shadow-lg px-5 py-10  bg-white'>
           {msg && <Alert alert={alert} />}
 
           {confirmAccount && (
             <Link 
-                className='block text-center my-5 text-slate-500 uppercase text-sm'
+                className='block text-center my-5 text-emerald-950 uppercase text-sm'
                 to="/"
-            >Inicia Sesión</Link>
+            >Login</Link>
           )}
         </div>
     </>

@@ -1,28 +1,25 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { sendNewUser } from '../../server/api/user/post'
+
 import Alert from '../../components/Alert'
-import { sendNewUser } from './../../server/api/user/post'
 
 
 const Signup = () => {
 
+    
     const [ newUser, setNewUser] = useState( {
         userName: '',
         email: '',
         password: '',
         password2:''
     })
-    const [ alert, setAlert ] = useState({})
-
-
-
+    const [alert, setAlert] = useState({})
 
     const handleChange = e => {
-
         const { name, value } = e.target
         const newUserData = {...newUser, [name]:value}
         setNewUser(newUserData)
-
     }
 
     const handleSubmit = async e => {
@@ -31,15 +28,15 @@ const Signup = () => {
 
         if([userName, email, password, password2].includes('')) {
             setAlert({
-                msg: 'Todos los campos son obligatorios',
+                msg: 'All fields is mandatory',
                 error: true
-            })
+            });
             return
         }
 
         if(password !== password2 ) {
             setAlert({
-                msg: 'Los password no son iguales',
+                msg: 'Password is not same',
                 error: true
             })
             return
@@ -47,7 +44,7 @@ const Signup = () => {
 
         if(password.length < 6 ) {
             setAlert({
-                msg: 'El Password es muy corto, agrega mínimo 6 caracteres',
+                msg: 'Password min 6 characteres',
                 error: true
             })
             return
@@ -55,8 +52,6 @@ const Signup = () => {
 
         setAlert({})
 
-
-        // Crear el usuario en la API
         try {
             const { data } = await sendNewUser(newUser)
             setAlert({
@@ -77,33 +72,34 @@ const Signup = () => {
                 error: true
             })
         }
+
     }
 
     const { msg } = alert
 
     return (
         <>
-            <h1 className="text-sky-600 font-black text-3xl capitalize text-center">Crea tu Cuenta y Administra tus {''}
-                <span className="text-slate-700">proyectos</span>
+            <h1 className="text-teal-600 font-black text-4xl capitalize">signup 
+                <span className="text-emerald-900">User</span>
             </h1>
 
-            { msg && <Alert alerta={alert} /> }
+            {msg && <Alert alert={alert} />}
         
             <form 
-                className="my-10 bg-white shadow rounded-lg p-10"
-                onSubmit={ handleSubmit }
+                className="my-10 bg-white shadow  p-10"
+                onSubmit={handleSubmit}
             >
                 <div className="my-5">
                     <label 
                         className="uppercase text-gray-600 block text-xl font-bold"
-                        htmlFor="nombre"
-                    >Nombre</label>
+                        htmlFor="username"
+                    >Username</label>
                     <input
                         id="userName"
                         name="userName"
                         type="text"
-                        placeholder="Tu Nombre"
-                        className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                        placeholder="Username"
+                        className="w-full mt-3 p-3 border  bg-gray-50"
                         value={ newUser.userName }
                         onChange={ handleChange }
                     />
@@ -118,8 +114,8 @@ const Signup = () => {
                         id="email"
                         name="email"
                         type="email"
-                        placeholder="Email de Registro"
-                        className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                        placeholder="Email"
+                        className="w-full mt-3 p-3 border  bg-gray-50"
                         value={ newUser.email }
                         onChange={ handleChange }
                     />
@@ -133,8 +129,8 @@ const Signup = () => {
                         id="password"
                         name="password"
                         type="password"
-                        placeholder="Password de Registro"
-                        className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                        placeholder="Password"
+                        className="w-full mt-3 p-3 border  bg-gray-50"
                         value={newUser.password}
                         onChange={handleChange}
                     />
@@ -144,13 +140,13 @@ const Signup = () => {
                     <label 
                         className="uppercase text-gray-600 block text-xl font-bold"
                         htmlFor="password2"
-                    >Repetir Password</label>
+                    >Password, again</label>
                     <input
                         id="password2"
                         name="password2"
                         type="password"
-                        placeholder="Repetir tu Password"
-                        className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                        placeholder="Password Two"
+                        className="w-full mt-3 p-3 border  bg-gray-50"
                         value={newUser.password2}
                         onChange={handleChange}
                     />
@@ -158,26 +154,26 @@ const Signup = () => {
 
                 <input 
                     type="submit"
-                    value="Crear Cuenta"
-                    className="bg-sky-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
+                    value="Create Account"
+                    className="bg-teal-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-teal-800 transition-colors"
                 />
                 
             </form>
 
             <nav className="lg:flex lg:justify-between">
                 <Link 
-                    className='block text-center my-5 text-slate-500 uppercase text-sm'
+                    className='block text-center my-5 text-emerald-950 uppercase text-sm'
                     to="/"
-                >¿Ya tienes una cuenta? Inicia Sesión</Link>
+                >Login</Link>
 
                 <Link 
-                    className='block text-center my-5 text-slate-500 uppercase text-sm'
-                    to="/olvide-password"
-                >Olvide Mi Password</Link>
+                    className='block text-center my-5 text-emerald-950 uppercase text-sm'
+                    to="/reset-password"
+                >Forgot your Password?</Link>
             </nav>
         
         </>
-  )
+    )
 }
 
 export default Signup

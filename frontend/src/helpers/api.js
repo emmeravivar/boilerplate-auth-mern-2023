@@ -4,10 +4,10 @@ import { useEffect, useState } from "react"
 // GET METHODS
 export const getAxios = (url) => {
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     const [ data, setData] = useState(null)
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     useEffect(() => {
             const fetchData = async () => {
                 const { data } = await axios.get(url);
@@ -25,10 +25,10 @@ export const getAxios = (url) => {
 // POST METHODS
 export const postAxios = (url) => {
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     const [ data, setData] = useState(null)
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     useEffect(() => {
         const fetchData = async (nombre, email, password) => {
             try{
@@ -50,7 +50,6 @@ export const postAxios = (url) => {
         fetchData();
 
     },[])
-    console.log('Cuando llega al retrun...')
     return { data }
     
 }
@@ -58,10 +57,10 @@ export const postAxios = (url) => {
 // PUT METHODS
 export const putAxios = (url) => {
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     const [ data, setData] = useState(null)
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+
     useEffect(() => {
         const fetchData = async (id, userId, title, body) => {
             try{
@@ -97,10 +96,8 @@ export const putAxios = (url) => {
 // DELETE METHODS
 export const deleteAxios = (url) => {
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [ data, setData] = useState(null)
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         const fetchData = async() => {
             try{ 

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
-export const emailConfirmNewUserToken = async (datos) => {
-    const { email, userName, token } = datos
+export const emailConfirmNewUserToken = async (data) => {
+    const { email, userName, token } = data
 
 
     const transport = nodemailer.createTransport({
@@ -14,14 +14,13 @@ export const emailConfirmNewUserToken = async (datos) => {
     });
 
     const info = await transport.sendMail({
-        from:'"EM - Administrador" <cuentas@cuentas-es>',
+        from:'"EM - Administrador" <account@account-com>',
         to: email,
-        subject: "Eva confirma tu cuenta",
-        text: 'Comprueba tu cuenta',
+        subject: "User confirm your account",
+        text: 'Send the email',
         html: `
-            <p>Hola ${userName} comprueba tu cuenta.</p>
-            <a href=${process.env.FRONTEND_URL}/confirm-account/${token}>Confirmar cuenta</a>
-            <p>Ignora este email si no eres tú.</p>        
+            <p>Hi! ${userName} Please, confirm your account.</p>
+            <a href=${process.env.FRONTEND_URL}/confirm-account/${token}>Confirm Account</a>    
         `
     })
 }

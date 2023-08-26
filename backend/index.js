@@ -40,5 +40,5 @@ app.use("/api/user", usersRoutes)
 
 //And call listen methods
 app.listen(port, () => {
-    console.log('servidor corriendo en el puerto 4000')
+    console.log('server in port 4000')
 })

@@ -15,7 +15,6 @@ const AuthProvider = ({ children }) => {
 
         const authUser = async () => {
             const token = localStorage.getItem('token')
-            console.log('Entrando aquí... =>', token)
 
             if(!token){
                 setLoading(false) 
@@ -30,7 +29,7 @@ const AuthProvider = ({ children }) => {
             }
 
             try {
-                console.log('Leyendo en try')
+
                 const { data } = await getUserProfile(config)
                 console.log('Data:', data)
                 setAuth(data)

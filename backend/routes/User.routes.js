@@ -1,5 +1,5 @@
 import express from "express"
-import { createNewUser, authUser, confirmTokenUser, resetPassword, checkTokenUser, newPassword, userProfile, otherProfile } from "../controllers/Usuario.controllers.js";
+import { createNewUser, authUser, confirmTokenUser, resetPassword, checkTokenUser, newPassword, userProfile, otherProfile } from "../controllers/User.controllers.js";
 import checkAuth  from '../middleware/checkAuth.js'
 
 
