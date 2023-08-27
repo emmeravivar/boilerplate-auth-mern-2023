@@ -48,6 +48,7 @@ const AuthProvider = ({ children }) => {
     const closeSesion = () => {
         setAuth({})
         navigate('/')
+        localStorage.clear()
     }
     return(
         <AuthContext.Provider
