@@ -10,7 +10,9 @@ router.post("/", createNewUser)
 router.post("/login", authUser)
 router.get('/confirm-account/:token', confirmTokenUser)
 router.post('/reset-password', resetPassword)
-router.route( '/reset-password/:token' ).get(checkTokenUser).post(newPassword)
+router.route( '/reset-password/:token' )
+    .get(checkTokenUser)
+    .post(newPassword)
 
 //Rutas privadas
 router.get('/profile', checkAuth, userProfile)

@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router-dom'
 import Routers  from './router/routers.jsx'
 
 
-import '@/styles/index.scss'
+import './index.css'
 
 
 

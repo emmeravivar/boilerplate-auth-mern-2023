@@ -33,7 +33,7 @@ const createNewUser = async (req, res) => {
 		res.json(user)
 	}
 	catch (error) {
-		error = new Error('No se pudo crear el User');
+		error = new Error('No create a user');
 		return res.status(401).json({ msg: error.message })
 	}
 } 

@@ -4,11 +4,10 @@ import dotenv from "dotenv"
 import cors from "cors"
 import { connectBD } from "./config/connectDb.js"
 import usersRoutes from "./routes/User.routes.js"
-import artistRoutes from "./routes/Artist.routes.js"
-
 
 //Write the request
 const app = express()
+
 //configurando leer JSON
 app.use(express.json())
 
@@ -39,7 +38,7 @@ app.use(cors(corsOptions))
 
 //Routing
 app.use("/api/user", usersRoutes)
-app.use("/api/artist", artistRoutes)
+
 
 //And call listen methods
 app.listen(port, () => {

@@ -29,10 +29,11 @@ const AuthProvider = ({ children }) => {
             }
 
             try {
+
                 const { data } = await getUserProfile(config)
                 console.log('Data:', data)
                 setAuth(data)
-                navigate('/access/dashboard/nombre')
+                navigate('/dashboard')
             }
             catch(error) {
                 setAuth({})
