@@ -1,46 +1,22 @@
-//Configuración del servidor
-import express from "express"
-import dotenv from "dotenv"
-import cors from "cors"
-import { connectBD } from "./config/connectDb.js"
-import usersRoutes from "./routes/User.routes.js"
+    const express = require('express')
 
-//Write the request
-const app = express()
+    const app = express()
 
-//configurando leer JSON
-app.use(express.json())
+    app.get('/', (req, res) => {
+        res.send('Express JS on Vercel')
+    })
 
-const port = process.env.PORT || 4000
+    app.get('/ping', (req, res) => {
+        res.send('pong 🏓')
+    })
 
+    const port = process.env.PORT || 8080
 
-
-//Configurando dorenv
-dotenv.config(); // busca un archivo .env
-
-//Conectando nuestra BBDD
-connectBD()
-
-//Configurar CORS
-    // WhiteList
-    // const whitelist = [process.env.FRONT_END_URL, process.env.FRONT_END_URL_LOCALHOST]
-    // const corsOptions = {
-    //     origin: (origin, callback) => {
-    //         console.log(origin)
-    //         if (whitelist.includes(origin)) {
-    //             callback(null, true)
-    //         } else {
-    //             callback(new Error('Not allowed by CORS'))
-    //         }
-    //     }
-    // }
-// app.use(cors(corsOptions))
-
-//Routing
-app.use("/api/user", usersRoutes)
-
-
-//And call listen methods
-app.listen(port, () => {
-    console.log('server in port 4000')
-})
+    app.listen(port, (err, res) => {
+        if (err) {
+            console.log(err)
+            return res.status(500).send(err.message)
+        } else {
+            console.log('[INFO] Server Running on port:', port)
+        }
+    })
