@@ -7,7 +7,7 @@
     })
 
     app.get('/ping', (req, res) => {
-        res.send('pong 🏓')
+        res.send('pong')
     })
 
     const port = process.env.PORT || 8080
